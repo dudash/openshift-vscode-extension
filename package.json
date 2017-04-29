@@ -1,7 +1,7 @@
 {
     "name": "openshift-vscode-extension",
     "displayName": "openshift-vscode-extension",
-    "description": "Connects Visual Studio Code to your OpenShift Container Platform (3.x) clusters to manage projects, deploy services, and build apps",
+    "description": "Connects Visual Studio Code to your OpenShift Container Platform (3.x) clusters to do a few things.  Just a prototype right now...",
     "version": "0.0.1",
     "publisher": "dudash",
     "engines": {
@@ -32,19 +32,31 @@
         "commands": [
         {
             "command": "extension.login",
-            "title": "OpenShift Login"
+            "title": "OpenShift login"
         },
         {
             "command": "extension.logout",
-            "title": "OpenShift Logout"
+            "title": "OpenShift logout"
         },
         {
             "command": "extension.getStatus",
-            "title": "OpenShift Get Status"
+            "title": "OpenShift get status"
         },
         {
             "command": "extension.describeThis",
-            "title": "OpenShift Describe Selected Text"
+            "title": "OpenShift describe selected text"
+        },
+        {
+            "command": "extension.getPods",
+            "title": "OpenShift get pods in current project"
+        },
+        {
+            "command": "extension.getBuilds",
+            "title": "OpenShift get builds in current project"
+        },
+        {
+            "command": "extension.getLogs",
+            "title": "OpenShift get logs for a build config"
         }
         ]
     },
@@ -60,6 +72,15 @@
                 "openshift.token": {
                 "type": "string",
                 "description": "Get your access token from https:://masterURL:8443/console/command-line or with oc whoami --token"
+            },
+                "openshift.insecure": {
+                "type": "boolean",
+                "default": true,
+                "description": "Allow connections to secured API without SSL certs"
+            },
+                "openshift.defaultProject": {
+                "type": true,
+                "description": "The extenstion will try to select this project on login"
             }
         }
     },
