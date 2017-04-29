@@ -24,8 +24,13 @@
     "icon": "assets/openshift-logo.png",
     "activationEvents": [
         "onCommand:extension.login",
+        "onCommand:extension.logout",
         "onCommand:extension.getStatus",
-        "onCommand:extension.describeThis"
+        "onCommand:extension.describeThis",
+        "onCommand:extension.getPods",
+        "onCommand:extension.getBuilds",
+        "onCommand:extension.getLogs",
+        "onCommand:extension.selectProject"
     ],
     "main": "./extension",
     "contributes": {
@@ -40,23 +45,27 @@
         },
         {
             "command": "extension.getStatus",
-            "title": "OpenShift get status"
+            "title": "OpenShift get project status"
         },
         {
             "command": "extension.describeThis",
-            "title": "OpenShift describe selected text"
+            "title": "OpenShift describe selected text (in current project)"
         },
         {
             "command": "extension.getPods",
-            "title": "OpenShift get pods in current project"
+            "title": "OpenShift get pods (in current project)"
         },
         {
             "command": "extension.getBuilds",
-            "title": "OpenShift get builds in current project"
+            "title": "OpenShift get builds (in current project)"
         },
         {
             "command": "extension.getLogs",
-            "title": "OpenShift get logs for a build config"
+            "title": "OpenShift get build config logs (in current project)"
+        },
+        {
+            "command": "extension.selectProject",
+            "title": "OpenShift select a project"
         }
         ]
     },

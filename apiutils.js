@@ -83,6 +83,30 @@ var oapiGetProjects = function() {
 }
 
 //--------------------------------------------------------------------------------
+var oapiSetProject = function(project) {
+    return new Promise((resolve, reject) => {
+        var url = masterURL + OAPIPROJ + project;
+        var opts = {
+            method: 'GET',
+            headers: { 'Authorization': 'Bearer ' + token },
+			agent: agent
+		};
+        console.log('GET from ' + url + ' with token ' + token + ', insecure=' + insecure + '\n');
+        fetch(url, opts)
+            .then(function(res) {
+                console.log('got a response from ' + url + '\n');
+                return res.json();
+            }).then(function(json) {
+                console.log(json);
+                resolve(json);
+            }).catch(function(err) {
+                console.log(err);
+                reject(err);
+            });
+    });
+}
+
+//--------------------------------------------------------------------------------
 function convertProjectsJsonToArray(json) {
     var items = json.items;
     var projects = [];
@@ -208,6 +232,7 @@ var oapiLogs = function(inproject, resource) {
 exports.oapiLogin = oapiLogin;
 exports.oapiLogout = oapiLogout;
 exports.oapiGetProjects = oapiGetProjects;
+exports.oapiSetProject = oapiSetProject;
 exports.convertProjectsJsonToArray = convertProjectsJsonToArray;
 exports.oapiDescribe = oapiDescribe;
 exports.oapiStatus = oapiStatus;

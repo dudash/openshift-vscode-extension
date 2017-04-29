@@ -39,7 +39,7 @@ function activate(context) {
     statusBarItem.text = 'OpenShift-Login';
     statusBarItem.tooltip = 'Click to Login';
     statusBarItem.command = 'openshift.login';
-    statusBarItem.show();
+    statusBarItem.show();  // FIXME: this doesn't show before login for some reason
 
     // ****** Login Command
     var disposable = vscode.commands.registerCommand('extension.login', function () {
@@ -61,7 +61,7 @@ function activate(context) {
                     openshiftOutput.append('Attempting to login to: ' + masterURL + ' with token ' + token + '\n');
                     apiutils.oapiLogin(masterURL, token, insecure)
                         .then(value => {
-                            // TODO: make sure login succeeded
+                            // FIXME: make sure login succeeded
                             loggedIn = true;
                             openshiftOutput.append('Logged into: ' + masterURL + ' with token ' + token + '\n');
                             
@@ -71,10 +71,8 @@ function activate(context) {
                                     projectsList = apiutils.convertProjectsJsonToArray(value);
                                     openshiftOutput.append('Available projects are:' + projectsList + '\n\n');
                                     statusBarItem.text = currentProject;
-                                    statusBarItem.tooltip = 'Logged into ' + masterURL;
-                                    statusBarItem.command = null;
-                                    // now put this into a downdown list somehow
-                                    //statusBarItem.command = 'extension.selectProject';
+                                    statusBarItem.tooltip = 'OpenShift - Logged into ' + masterURL;;
+                                    statusBarItem.command = 'extension.selectProject';
                                     statusBarItem.show();
                                 })
                                 .catch(value => {
@@ -166,7 +164,7 @@ function activate(context) {
                 openshiftOutput.append('PODS IN ' + currentProject + ':\n' + JSON.stringify(value) + '\n\n');
             })
             .catch(value => {
-                vscode.window.showErrorMessage('Error getting status');
+                vscode.window.showErrorMessage('Error getting pods');
                 openshiftOutput.append('ERROR: \n' + value + '\n\n');
                 return;
             });
@@ -181,7 +179,7 @@ function activate(context) {
                 openshiftOutput.append('BUILDS IN ' + currentProject + ':\n' + JSON.stringify(value) + '\n\n');
             })
             .catch(value => {
-                vscode.window.showErrorMessage('Error getting status');
+                vscode.window.showErrorMessage('Error getting builds');
                 openshiftOutput.append('ERROR: \n' + value + '\n\n');
                 return;
             });
@@ -203,10 +201,38 @@ function activate(context) {
                 openshiftOutput.append('LOGS IN ' + currentProject + ':\n' + value + '\n\n');
             })
             .catch(value => {
-                vscode.window.showErrorMessage('Error getting status');
+                vscode.window.showErrorMessage('Error getting logs');
                 openshiftOutput.append('ERROR: \n' + value + '\n\n');
                 return;
             });
+    });
+    context.subscriptions.push(disposable);
+
+    // ****** Select Project Command
+    disposable = vscode.commands.registerCommand('extension.selectProject', function () {
+        if (!loggedIn) { vscode.window.showErrorMessage('Please login to an OpenShift cluster'); return; }
+        
+        // TOOD: popup a request to select the project
+        vscode.window.showQuickPick(projectsList)
+        .then(value => {
+            if (!value) { return; } // nothing selected
+            var selected = '/' + value;
+            // make sure we can access it
+            apiutils.oapiSetProject(selected)
+                .then(value => {
+                    currentProject = selected;
+                    openshiftOutput.append('SELECTED PROJECT: ' + currentProject + '\n\n');
+                    statusBarItem.text = currentProject;
+                    statusBarItem.tooltip = 'OpenShift - Logged into ' + masterURL;;
+                    statusBarItem.command = 'extension.selectProject';
+                    statusBarItem.show();
+                })
+                .catch(value => {
+                    vscode.window.showErrorMessage('Error settting new project');
+                    openshiftOutput.append('ERROR: \n' + value + '\n\n');
+                    return;
+                });
+        })
     });
     context.subscriptions.push(disposable);
 }
