@@ -1,7 +1,7 @@
 {
     "name": "openshift-vscode-extension",
     "displayName": "openshift-vscode-extension",
-    "description": "Connects Visual Studio Code to your OpenShift Container Platform (3.x) clusters to manage projects, deploy services, and build apps!",
+    "description": "Connects Visual Studio Code to your OpenShift Container Platform (3.x) clusters to manage projects, deploy services, and build apps",
     "version": "0.0.1",
     "publisher": "dudash",
     "engines": {
@@ -10,15 +10,58 @@
     "categories": [
         "Other"
     ],
+    "keywords": [
+        "docker",
+        "container",
+        "openshift",
+        "kubernetes",
+        "redhat"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/dudash/openshift-vscode-extension.git"
+    },
+    "icon": "assets/openshift-logo.png",
     "activationEvents": [
-        "onCommand:extension.sayHello"
+        "onCommand:extension.login",
+        "onCommand:extension.getStatus",
+        "onCommand:extension.describeThis"
     ],
     "main": "./extension",
     "contributes": {
-        "commands": [{
-            "command": "extension.sayHello",
-            "title": "Hello World"
-        }]
+        "commands": [
+        {
+            "command": "extension.login",
+            "title": "OpenShift Login"
+        },
+        {
+            "command": "extension.logout",
+            "title": "OpenShift Logout"
+        },
+        {
+            "command": "extension.getStatus",
+            "title": "OpenShift Get Status"
+        },
+        {
+            "command": "extension.describeThis",
+            "title": "OpenShift Describe Selected Text"
+        }
+        ]
+    },
+    "configuration": {
+        "title": "OpenShift VSCode",
+        "type": "object",
+        "properties": {
+                "openshift.masterURL": {
+                "type": "string",
+                "default": "localhost:8443",
+                "description": "URL to your OpenShfit master, it should look like host:port"
+            },
+                "openshift.token": {
+                "type": "string",
+                "description": "Get your access token from https:://masterURL:8443/console/command-line or with oc whoami --token"
+            }
+        }
     },
     "scripts": {
         "postinstall": "node ./node_modules/vscode/bin/install",
@@ -31,5 +74,8 @@
         "eslint": "^3.6.0",
         "@types/node": "^6.0.40",
         "@types/mocha": "^2.2.32"
+    },
+    "dependencies": {
+        "node-fetch":"1.6.3"
     }
 }
