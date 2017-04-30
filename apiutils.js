@@ -26,7 +26,7 @@ const APINS_PREFIX = "/api/v1/namespaces";
 const OAPINS_PREFIX = "/oapi/v1/namespaces";
 const PATH_PODS = "/pods";
 const PATH_BUILDS = "/builds";
-const PATH_BCLOGS = "/buildconfigs";
+const PATH_BCS = "/buildconfigs";
 
 //--------------------------------------------------------------------------------
 var oapiLogin = function(m, t, i) {
@@ -205,9 +205,47 @@ var oapiBuilds = function(inproject) {
 }
 
 //--------------------------------------------------------------------------------
+var oapiBuildConfigs = function(inproject) {
+    return new Promise((resolve, reject) => {
+        var url = masterURL + OAPINS_PREFIX + inproject + PATH_BCS;
+        var opts = {
+            method: 'GET',
+            headers: { 'Authorization': 'Bearer ' + token },
+			agent: agent
+		};
+        console.log('GET from ' + url + ' with token ' + token + ', insecure=' + insecure + '\n');
+        fetch(url, opts)
+            .then(function(res) {
+                console.log('got a response from ' + url + '\n');
+                return res.json();
+            }).then(function(json) {
+                console.log(json);
+                console.log('------');
+                console.log(convertBuildConfigsJsonToArray(json));
+                resolve(json);
+            }).catch(function(err) {
+                console.log(err);
+                reject(err);
+            });
+    });
+}
+
+//--------------------------------------------------------------------------------
+function convertBuildConfigsJsonToArray(json) {
+    var items = json.items;
+    var bcArray = [];
+    for(var i = 0; i < items.length; i++)
+    {
+        var name = items[i].metadata.name;
+        bcArray.push(name);
+    }
+    return bcArray;
+}
+
+//--------------------------------------------------------------------------------
 var oapiLogs = function(inproject, resource) {
     return new Promise((resolve, reject) => {
-        var url = masterURL + OAPINS_PREFIX + inproject + PATH_BCLOGS + '/' + resource;
+        var url = masterURL + OAPINS_PREFIX + inproject + PATH_BCS + '/' + resource;
         var opts = {
             method: 'GET',
             headers: { 'Authorization': 'Bearer ' + token },
@@ -238,4 +276,6 @@ exports.oapiDescribe = oapiDescribe;
 exports.oapiStatus = oapiStatus;
 exports.oapiPods = oapiPods;
 exports.oapiBuilds = oapiBuilds;
+exports.oapiBuildConfigs = oapiBuildConfigs;
+exports.convertBuildConfigsJsonToArray = convertBuildConfigsJsonToArray;
 exports.oapiLogs = oapiLogs;

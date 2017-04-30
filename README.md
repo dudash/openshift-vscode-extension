@@ -1,19 +1,19 @@
 # OpenShift Extension for Visual Studio Code
-## This is just a prototype extension, your contribution of ideas, design, code, and testing is welcome!
+## This is a prototype extension, your contribution of ideas, design, code, and testing is welcome!
 
 Connects Visual Studio Code to your OpenShift Container Platform (3.x) clusters to manage projects, deploy services, see status, and build apps.  
 
 ## Features
 
-To bring up the capability press Cmd+Shift+P and type 'OpenShift'.  It'' bring up the list of available commands.
+To bring up the capability press Cmd+Shift+P and type 'OpenShift'.  It'll bring up the list of available commands.
 
 > Tip: Login is required before executing most of the other commands.
 
-![Command Palette](images/feature-commands.png)
+![Command Palette](images/feature-commands.gif)
 
 > Tip: Several commands require a selected project.  You can change by clicking the current project name in the status bar and then selecting a new project from the pick list.
 
-![Select a Project](images/feature-selectproject.png)
+![Select a Project](images/feature-selectproject.gif)
 
 
 ## Requirements
@@ -45,15 +45,15 @@ You would add these to your UserSettings or WorkspaceSettings files.  For exampl
 
 ## Known Issues
 
-None.
+None.  But if you find one write a bug.
 
 ## Release Notes
 
-Just a prototype, no releases yet.
+Just a prototype release.  Will stay versioned as 0.x.x while in prototype mode.  No release notes for the prototypes.
 
 ### Prerelease
 
-Settings, Login, list builds, see pods...
+Extension settings, login, select project, list pods, list builds... if you want more features, ask by writing a github issue!
 
 -----------------------------------------------------------------------------------------------------------
 

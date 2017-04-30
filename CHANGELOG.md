@@ -1,7 +1,6 @@
 # Change Log
 All notable changes to the "openshift-vscode-extension" extension will be documented in this file.
+787499
 
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
-
-## [Unreleased]
-- No releases
+## [Prerelease]
+- Not tracking changes until v1.0

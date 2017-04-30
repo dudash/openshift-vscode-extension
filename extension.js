@@ -191,18 +191,31 @@ function activate(context) {
         if (!loggedIn) { vscode.window.showErrorMessage('Please login to an OpenShift cluster'); return; }
 
         //!!!!!!
-        vscode.window.showErrorMessage('Logs command not implemented yet');
-        
-        // TOOD: popup a request to select the build you want logs for
-        // vscode.window.showQuickPick()
-
-        apiutils.oapiLogs(currentProject)
-            .then(value => {
-                openshiftOutput.append('LOGS IN ' + currentProject + ':\n' + value + '\n\n');
+        // vscode.window.showErrorMessage('Logs command not implemented yet');
+        apiutils.oapiBuildConfigs(currentProject)
+            .then(bcjson => {
+                var buildConfigs = apiutils.convertBuildConfigsJsonToArray(bcjson);
+                openshiftOutput.append('Available bcs are: ' + buildConfigs + '\n\n');
+                vscode.window.showQuickPick(buildConfigs)
+                .then(pick => {
+                    if (!pick) { return; } // nothing selected
+                    var selected = '/' + pick;
+                    // make sure we can access it
+                    apiutils.oapiLogs(currentProject, selected)
+                        .then(logs => {
+                            // TODO: parse logs to readable format
+                            openshiftOutput.append('LOGS IN ' + currentProject + ' for bc' + selected + ':\n' + logs + '\n\n');
+                        })
+                        .catch(logserr => {
+                            vscode.window.showErrorMessage('Error getting logs');
+                            openshiftOutput.append('ERROR: \n' + logserr + '\n\n');
+                            return;
+                        });
+                });
             })
-            .catch(value => {
+            .catch(bcerr => {
                 vscode.window.showErrorMessage('Error getting logs');
-                openshiftOutput.append('ERROR: \n' + value + '\n\n');
+                openshiftOutput.append('ERROR: \n' + bcerr + '\n\n');
                 return;
             });
     });
@@ -211,8 +224,6 @@ function activate(context) {
     // ****** Select Project Command
     disposable = vscode.commands.registerCommand('extension.selectProject', function () {
         if (!loggedIn) { vscode.window.showErrorMessage('Please login to an OpenShift cluster'); return; }
-        
-        // TOOD: popup a request to select the project
         vscode.window.showQuickPick(projectsList)
         .then(value => {
             if (!value) { return; } // nothing selected
@@ -232,7 +243,7 @@ function activate(context) {
                     openshiftOutput.append('ERROR: \n' + value + '\n\n');
                     return;
                 });
-        })
+        });
     });
     context.subscriptions.push(disposable);
 }
