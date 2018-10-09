@@ -1,8 +1,8 @@
 {
     "name": "openshift-vscode-extension",
-    "displayName": "openshift-vscode-extension",
-    "description": "Connects Visual Studio Code to your OpenShift Container Platform (3.x) clusters to aide developers.  Currently a prototype release...",
-    "version": "0.0.2",
+    "displayName": "openshift-vscode-extension (DEPRECATED)",
+    "description": "DEPRECATED - Connects Visual Studio Code to your OpenShift Container Platform (3.x) clusters to aide developers.  Currently a prototype release...",
+    "version": "0.0.3",
     "publisher": "dudash",
     "engines": {
         "vscode": "^1.11.0"
